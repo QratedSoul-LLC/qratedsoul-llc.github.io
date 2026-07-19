@@ -4060,5 +4060,44 @@ window.addEventListener('load', async () => {
   }
 });
 </script>
+<script>
+/* ===== Web demo cap (browser version only) ===== */
+(function() {
+  var CAP = 5;
+  var APP_URL = 'https://apps.apple.com/app/primepop/id6761229283';
+  var ov = document.createElement('div');
+  ov.className = 'overlay';
+  ov.id = 'webcap-overlay';
+  ov.innerHTML = '<div class="overlay-card">' +
+    '<div class="stars">★★★</div>' +
+    '<h2 style="margin-bottom:8px;">That&#39;s the web demo!</h2>' +
+    '<p style="margin-bottom:6px;">You cleared all 5 demo levels &mdash; nice popping.</p>' +
+    '<p style="opacity:0.8; font-size:0.9rem; margin-bottom:16px;">The full game &mdash; every level, all three themes, and progress that follows you &mdash; is free on the App Store.</p>' +
+    '<a class="btn btn-primary" style="display:block; text-decoration:none; margin-bottom:8px;" href="' + APP_URL + '" target="_blank" rel="noopener">Get PrimePop free on the App Store</a>' +
+    '<button class="btn btn-secondary btn-small" style="width:100%;" onclick="webcapReplay()">Replay demo from Level 1</button>' +
+    '</div>';
+  document.body.appendChild(ov);
+  window.webcapReplay = function() {
+    ov.classList.remove('active');
+    restartFullGame();
+  };
+  function showCap() {
+    var others = document.querySelectorAll('.overlay.active');
+    for (var i = 0; i < others.length; i++) others[i].classList.remove('active');
+    try { stopGameLoop(); } catch (e) {}
+    ov.classList.add('active');
+  }
+  var _next = window.goToNextRoundScreen;
+  window.goToNextRoundScreen = function() {
+    if (state.level >= CAP) { showCap(); return; }
+    return _next.apply(this, arguments);
+  };
+  var _init = window.initLevel;
+  window.initLevel = function() {
+    if (state.level > CAP) { showCap(); return; }
+    return _init.apply(this, arguments);
+  };
+})();
+</script>
 </body>
 </html>
